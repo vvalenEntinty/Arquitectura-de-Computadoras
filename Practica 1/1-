@@ -1,0 +1,58 @@
+ORG 1000H
+MSJ DB "holaaa"
+CONT DB 6
+TOTAL DB 0
+
+
+
+ORG 2000H
+SUMO:INC TOTAL
+MOV AL , MSJ
+MOV BX, OFFSET MSJ
+LOOP:CMP AL,'a'
+JZ SUMO
+INC BX
+MOV AL, [BX]
+
+DEC CONT 
+JNZ LOOP
+
+HLT
+END
+
+------------------------------------------------
+ORG 1000H        ; Datos
+
+MSJ DB "holaaa", 0     ; Cadena terminada en 0
+TOTAL DB 0             ; Contador de 'a'
+
+END
+
+ORG 3000H        ; Subrutinas
+
+ES_A: 
+    CMP AL, 'a'          ; Comparar con 'a'
+    JNZ fin_es_a         ; Si no es 'a', saltar
+    INC TOTAL            ; Si es 'a', incrementar TOTAL
+fin_es_a:
+    RET
+    
+
+ORG 2000H        ; Código principal
+
+    MOV BX, OFFSET MSJ   ; Apuntador al inicio del mensaje
+    MOV TOTAL, 0         ; Inicializamos TOTAL a 0
+
+loop:
+    MOV AL, [BX]         ; Cargar el caracter actual
+    CMP AL, 0            ; Revisar si es fin de cadena
+    JE fin_loop           ; Si es 0, terminamos
+    CALL ES_A            ; Llamar a subrutina para contar 'a'
+    INC BX               ; Pasar al siguiente caracter
+    JMP loop             ; Repetir
+
+fin_loop:
+    HLT                  ; Fin del programa
+
+
+
