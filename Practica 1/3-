@@ -1,0 +1,28 @@
+A) En BX se almacena la direccion de memoria de num que en este caso seria 1500H, para poder leer un dato desde el teclado con la instruccion INT 6
+
+B)Imprime el numero que se leyo
+
+C)Asi es, en el registro CL queda almacenado el numero leido desde teclado
+
+d) ORG 1000H
+MSJ DB "INGRESE UN NUMERO:"
+FIN DB ?
+ORG 1500H
+NUM1 DB ?
+NUM2 DB ?
+ORG 2000H
+MOV BX, OFFSET MSJ
+MOV AL, OFFSET FIN-OFFSET MSJ
+INT 7
+MOV BX, OFFSET NUM1
+INT 6
+MOV AL, 1
+INT 7
+MOV BX, OFFSET NUM2
+INT 6 
+MOV AL, 1
+INT 7
+
+MOV CL, NUM1
+INT 0
+END
