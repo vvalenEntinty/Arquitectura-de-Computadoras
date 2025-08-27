@@ -1,0 +1,32 @@
+a) Imprime"ARQUITECTURA DE COMPUTADORAS-"
+"FACULTAD DE INFORMATICA- UNLP"
+
+b) porque esta en los registros en codigo ascii seguido de ARQUITECTURA DE COMPUTADORAS- FACULTAD DE INFORMATICA-
+
+C) En bx se almacena la direccion al puntero de la lista donde comienza el string, mientras que AL almacena la 
+cantidad de caracteres que posee.
+
+D)
+ORG 1000H
+MSJ DB "ARQUITECTURA DE COMPUTADORAS-"
+DB "FACULTAD DE INFORMATICA-"
+
+FIN DB ?
+ORG 2000H
+MOV BX, OFFSET MSJ
+MOV AL, OFFSET FIN - OFFSET MSJ
+INT 7
+INT 0
+END
+
+E)
+ORG 1000H
+MSJ DB "A"
+
+FIN DB ?
+ORG 2000H
+MOV BX, OFFSET MSJ
+MOV AL, OFFSET FIN - OFFSET MSJ
+INT 7
+INT 0
+END
