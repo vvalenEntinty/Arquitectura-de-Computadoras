@@ -1,0 +1,76 @@
+ORG 1000H
+  msjIngreso db "Ingresar Contaseña de 4 caracteres"
+  saltoLinea1 db 10
+  msjPermitido db "Acceso permitido"
+  saltoLinea2 db 10
+  msjIncorrecto db "Acceso denegado"
+  saltoLinea3 db 10
+  msjVolver db "Ingrese otra vez la contraseña"
+  saltoLinea4 db 10
+  msjDenegado db "Acceso BLOQUEADO"
+
+  intentos db 5
+  cant db 4
+  passOriginal db "puto"
+  passIngresada db ?
+
+ORG 2000H
+ingreso:  mov bx,offset msjIngreso
+  MOV AL,offset msjPermitido -offset msjIngreso
+  int 7 ; IMPRIMO EL MENSAJE INICIAL
+
+  mov ah, 4
+  mov bx, offset passIngresada
+  loop: INT 6
+        inc bx 
+        dec ah
+        jnz loop
+
+
+  ; verifico si es la misma contraseña
+  mov bx, offset passIngresada 
+  
+  mov al, [bx]
+  mov dx, bx
+  
+  mov bx, offset passOriginal
+  mov cl, [bx]
+  
+comparo:  cmp al, cl 
+          jnz error
+          dec cant
+          jz correcto
+          
+          
+          inc bx ;PASA A LA SIGUIENTE LETRA EN PASSORIGINAL
+          inc dx ;INCREMENTO EL BACKUP DE BX DE PASSINGRESADA
+
+          mov cl,[bx] ; siguiente letra de passOriginal
+          
+          mov bx, dx
+          mov al, [bx] ;me guardo en AL la sig letra de passIngresada
+
+          
+          jmp comparo
+          
+
+  error: mov bx, offset msjIncorrecto
+         mov al, offset msjVolver - offset msjIncorrecto
+         int 7
+         dec intentos
+         cmp intentos, 0 
+          
+         jnz ingreso ; SALTO SI TENGO MAS INTENTOS
+
+     
+         mov bx, offset msjDenegado ; ME QUEDE SIN INTENTOS
+         mov al, offset intentos- offset msjDenegado
+         int 7
+         jmp fin
+         
+  correcto: mov bx, offset msjPermitido
+            mov al, offset msjIncorrecto -  offset msjPermitido
+            int 7
+     
+fin:int 0
+END
