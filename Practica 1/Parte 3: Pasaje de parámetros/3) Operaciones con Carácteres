@@ -1,0 +1,23 @@
+org 1000h
+car db "S"
+
+org 3000h
+es_mayus: 
+          cmp al, 'A' ; al=72 - A=65
+          js no_es
+          cmp al, 'Z' ; al=72 - Z=90
+          jns no_es
+          mov ah, 0ffh
+          jmp fin
+          no_es: mov ah, 0
+
+fin:ret
+            
+org 2000h
+mov bx, offset car
+mov al, [bx]
+call es_mayus
+
+int 0
+end
+; ADD BYTE PTR [BX], 20H (convierto a minuscula)
