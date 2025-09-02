@@ -1,22 +1,40 @@
+
 org 1000h
-car db "S"
+msj db "Hola, Buenas Tardes"
+z db 91
 
 org 3000h
 es_mayus: 
-          cmp al, 'A' ; al=72 - A=65
+          mov al, [bx]
+          cmp al, 'A'   ; H=72 - A=65 = si es negativo , no es mayus
           js no_es
-          cmp al, 'Z' ; al=72 - Z=90
-          jns no_es
+          cmp z, al  ; H=72 - Z=90 = si es negativo, no es mayus
+          js no_es  
           mov ah, 0ffh
           jmp fin
-          no_es: mov ah, 0
+        no_es: mov ah, 0
+  fin:ret 
 
-fin:ret
+org 3200h 
+a_minus:cmp ah, 0ffh
+jnz fin_a_minus
+  add byte ptr[bx],20h
+fin_a_minus: ret
+
+org 3100h
+loop:
+     call es_mayus  
+     call a_minus
+     inc bx
+     dec cx
+     jnz loop
+ret
             
 org 2000h
-mov bx, offset car
-mov al, [bx]
-call es_mayus
+mov bx, offset msj ; tomo el primer caracter
+mov cx, offset z- offset msj ; AL longitud del string
+mov al,[bx] ; AL contiene el primer caracter
+call loop 
 
 int 0
 end
